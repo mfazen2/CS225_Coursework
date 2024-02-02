@@ -81,7 +81,7 @@ void sketchify(std::string inputFile, std::string outputFile) {
     output->writeToFile(outputFile);
     std::cout << "savesuccess" << std::endl;
     // Clean up memory
-    //delete myPixel;
+    delete myPixel;
     delete output;
     delete original;
 }

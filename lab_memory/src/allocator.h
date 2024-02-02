@@ -31,7 +31,7 @@ class Allocator
      *  groups to rooms.
      */
     void allocate();
-
+    ~Allocator();
     /**
      * Prints each letter and how many students there are for each one.
      *
@@ -89,11 +89,11 @@ class Allocator
     Room* rooms;
 
     /** Size of the rooms array */
-    int roomCount;
+    int roomCount = 0;
 
     /** Total number of students */
-    int studentCount;
+    int studentCount = 0;
 
     /** Total number of available seats across all rooms */
-    int totalCapacity;
+    int totalCapacity = 0;
 };
