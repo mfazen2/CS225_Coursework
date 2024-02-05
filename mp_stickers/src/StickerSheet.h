@@ -13,12 +13,21 @@
  * Represents an arrangement of many sticker that is output as a single Image
  * when the user calls render().
  */
+struct Sticker{
+  Image img;
+  int x = 0;
+  int y = 0;
+};
 class StickerSheet
 {
+
 private:
   // Add private variables and helper functions as needed, here.
   // You MUST use a vector to store the sticker layers
+  
+  std::vector<Sticker> stickers;
 public:
+ 
   /**
    * Add any constructors/destructors you may need based on your
    * class design for StickerSheet.

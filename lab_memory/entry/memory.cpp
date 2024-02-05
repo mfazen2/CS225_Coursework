@@ -1,4 +1,3 @@
-/**
  * @file main.cpp
  * A simple program that allocates students to rooms.
  */
