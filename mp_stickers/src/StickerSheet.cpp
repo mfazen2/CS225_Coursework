@@ -1,9 +1,7 @@
 #include "StickerSheet.h"
 
 StickerSheet::StickerSheet(const Image& picture) {
-    Image pic = Image(picture);
-    Sticker temp = {pic,0,0};
-    stickers.push_back(temp);
+    pic = Image(picture);
 }
 int StickerSheet::addSticker(Image& sticker, int x, int y) {
     Image pic = Image(sticker);
@@ -24,7 +22,12 @@ int StickerSheet::setStickerAtLayer(Image& sticker, unsigned layer, int x, int y
     return layer;
 }
 bool StickerSheet::translate(unsigned index, int x, int y) {
-    return false;
+    if (index < 0 || index >= stickers.size()){
+        return false;
+    }
+    stickers[index].x = x;
+    stickers[index].y = y;
+    return true;
 }
 void StickerSheet::removeSticker(unsigned index) {
     stickers.erase(stickers.begin()+index);
@@ -41,6 +44,6 @@ int StickerSheet::layers() const{
     return stickers.size();
 }
 Image StickerSheet::render() const{
-    Image temp = Image();
+    Image temp = Image(pic);
     return temp;
 }
