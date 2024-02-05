@@ -159,11 +159,26 @@ using namespace cs225;
         } 
     }
     void Image::scale(unsigned w, unsigned h){
-        resize(w,h);
+        
     }
     void Image::scale(double factor){
-        int w = static_cast<int>(factor*width());
-        int h = static_cast<int>(factor*height());
-        resize(w,h);
-    }
+        if (factor <= 0) {
+            throw std::exception();
+        }
+        PNG* og = new PNG(*this);
+        this->resize(factor*width(),factor*height());
+            for(unsigned int x = 0; x < width();x++){
+                for(unsigned int y = 0; y < height(); y++){
+                    std::cout << "x: " << x << std::endl;
+                    std::cout << "y: " << y << std::endl;
+                    HSLAPixel ogp = og->getPixel(x/factor,y/factor);
+                        HSLAPixel& temp = this->getPixel(x,y);
+                        temp.h=ogp.h;
+                        temp.l=ogp.l;
+                        temp.s=ogp.s;
+                        temp.a=ogp.a;
+                }
     
+    }
+    delete og;
+}

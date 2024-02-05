@@ -23,7 +23,7 @@ class Image : public cs225::PNG {
       * @param height Height of the new image.
       */
     Image(unsigned int width, unsigned int height) : PNG(width, height) {}
-
+    /**copy constructor**/
     /**
      * Lighten an Image by increasing the luminance of every pixel by 0.1.
      * This function ensures that the luminance remains in the range [0, 1].
