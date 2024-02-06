@@ -24,5 +24,10 @@ int main() {
   alma.readFromFile("../data/alma.png");
   alma.illinify();
   alma.writeToFile("illinify.png");
+
+  alma.readFromFile("../data/alma.png");
+  alma.resize(2000,2000);
+  alma.writeToFile("resizedemo.png");
   return 0;
+  
 }

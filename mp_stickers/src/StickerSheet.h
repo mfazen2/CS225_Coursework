@@ -13,21 +13,19 @@
  * Represents an arrangement of many sticker that is output as a single Image
  * when the user calls render().
  */
-struct Sticker{
-  Image img;
-  int x = 0;
-  int y = 0;
-};
 class StickerSheet
 {
 
 private:
   // Add private variables and helper functions as needed, here.
   // You MUST use a vector to store the sticker layers
-  Image pic = Image();
-  std::vector<Sticker> stickers;
+  Image pic;
+  std::vector<Image*> stickers;
+  std::vector<std::pair<int,int>> positions;
 public:
- 
+  /*make renderhelper to resize image and change position of base image if necessary*/
+  Image renderHelper(Image& input,int x, int y);
+  
   /**
    * Add any constructors/destructors you may need based on your
    * class design for StickerSheet.
@@ -39,7 +37,7 @@ public:
    * @param picture The base picture to use in the StickerSheet
    */
   StickerSheet(const Image& picture);
-
+  /*StickerSheet Destructor*/
   /**
    * Adds a `sticker` to the StickerSheet, so that the top-left of the sticker's
    * `Image` is at `(x, y)` on the StickerSheet.
@@ -130,4 +128,5 @@ public:
    * @return An Image object representing the drawn scene
    */
   Image render() const;
+
 };

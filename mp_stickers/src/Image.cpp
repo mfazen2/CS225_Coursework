@@ -159,7 +159,13 @@ using namespace cs225;
         } 
     }
     void Image::scale(unsigned w, unsigned h){
-        
+        double scalew = w / width();
+        double scaleh = h / height();
+        if (scalew <= scaleh) {
+            scale(scalew);
+        } else {
+            scale(scaleh);
+        }
     }
     void Image::scale(double factor){
         if (factor <= 0) {
@@ -169,8 +175,6 @@ using namespace cs225;
         this->resize(factor*width(),factor*height());
             for(unsigned int x = 0; x < width();x++){
                 for(unsigned int y = 0; y < height(); y++){
-                    std::cout << "x: " << x << std::endl;
-                    std::cout << "y: " << y << std::endl;
                     HSLAPixel ogp = og->getPixel(x/factor,y/factor);
                         HSLAPixel& temp = this->getPixel(x,y);
                         temp.h=ogp.h;
