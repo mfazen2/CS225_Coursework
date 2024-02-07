@@ -24,7 +24,7 @@ int StickerSheet::setStickerAtLayer(Image& sticker, unsigned layer, int x, int y
     return layer;
 }
 bool StickerSheet::translate(unsigned index, int x, int y) {
-    if (index < 0 || index >= stickers.size()){
+    if (index >= stickers.size()){
         return false;
     }
     positions[index].first = x;
@@ -37,6 +37,8 @@ void StickerSheet::removeSticker(unsigned index) {
     }
     stickers.erase(stickers.begin()+index);
     positions.erase(positions.begin()+index);
+    std::cout << "stickersize updated " << stickers.size() << std::endl;
+    
 }
 
 Image* StickerSheet::getSticker(unsigned index) {
@@ -51,6 +53,7 @@ int StickerSheet::layers() const{
 }
 
 Image StickerSheet::render() const{
+    Image *out = new Image(pic);
     int xmax = pic.width();
     int ymax = pic.height();
     for (size_t i = 0 ; i < stickers.size();i++){
@@ -61,7 +64,6 @@ Image StickerSheet::render() const{
         if (xmax < xstick)  xmax = xstick;
         if (ymax < ystick)  ymax = ystick;
     }
-    Image *out = new Image(pic);
     out->resize(xmax,ymax);
     for(size_t index =  0; index < stickers.size(); index++) {
         for(unsigned int i = 0; i < stickers[index]->width();i++) {
@@ -76,6 +78,7 @@ Image StickerSheet::render() const{
             }
         }
     }
+    
     Image output = *out;
     delete out;
     return output;

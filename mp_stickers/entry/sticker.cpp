@@ -9,7 +9,7 @@ int main() {
   Image alma; alma.readFromFile("../data/alma.png");
   Image i;  i.readFromFile("../data/i.png");
   StickerSheet sheet(alma);
-  sheet.addSticker(i,20,200);
+  sheet.addSticker(i,900,1000);
   sheet.render().writeToFile("stickertest.png");
 
 

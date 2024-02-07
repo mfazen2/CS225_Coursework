@@ -159,18 +159,15 @@ using namespace cs225;
         } 
     }
     void Image::scale(unsigned w, unsigned h){
-        double scalew = w / width();
-        double scaleh = h / height();
-        if (scalew <= scaleh) {
-            scale(scalew);
+        double factor;
+        if(w < h) {
+            factor = static_cast<double>(w)/ static_cast<double>(width());
         } else {
-            scale(scaleh);
+            factor = static_cast<double>(h) / static_cast<double>(height());
         }
+        scale(factor);
     }
     void Image::scale(double factor){
-        if (factor <= 0) {
-            throw std::exception();
-        }
         PNG* og = new PNG(*this);
         this->resize(factor*width(),factor*height());
             for(unsigned int x = 0; x < width();x++){

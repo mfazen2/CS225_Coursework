@@ -17,8 +17,8 @@ int main() {
 
   std::cout << "Using Image::scale to create `scale.png`..." << std::endl;
   alma.readFromFile("../data/alma.png");
-  alma.scale(2);
-  alma.writeToFile("scale2x.png");
+  alma.scale(100,200);
+  alma.writeToFile("lighten.png");
 
   std::cout << "Using Image::illinify to create 'illinify.png..." << std::endl;
   alma.readFromFile("../data/alma.png");
