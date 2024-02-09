@@ -3,15 +3,14 @@
  * Contains code to test your recursion, stack, and queue problems.
  */
 
+#include "../src/quackfun.h"
+#include "../src/exercises.h"
 #include <unistd.h>
 #include <iostream>
 #include <queue>
 #include <sstream>
 #include <stack>
 #include <string>
-
-#include "quackfun.h"
-#include "exercises.h"
 
 using namespace std;
 

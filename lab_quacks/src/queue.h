@@ -26,10 +26,11 @@ namespace std {
             template <class Alloc> queue(queue&& c, const Alloc& a) : libcpp_queue<T, Container>(c, a) { _ctor_count ++; };
 
             queue& operator=(const queue& other) = default;
+        
     };
-
-    template <class T, class Container>
-    size_t queue<T, Container>::_ctor_count = 0;
+        template <class T, class Container>
+        size_t queue<T, Container>::_ctor_count = 0;
+    
 }
 
 /* vim: set ft=cpp: */

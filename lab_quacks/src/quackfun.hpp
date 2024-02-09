@@ -1,9 +1,10 @@
 /**
- * @file quackfun.cpp
+ * @file quackfun.hpp
  * This is where you will implement the required functions for the
  * stacks and queues portion of the lab.
  */
-
+#include "quackfun.h"
+#include <iostream>
 namespace QuackFun {
 
 /**
@@ -29,9 +30,18 @@ namespace QuackFun {
 template <typename T>
 T sum(stack<T>& s)
 {
+    if (s.size() == 0) {
+        return 0;
+    }
+    T temp = s.top();
+    T total = s.top();
 
+    s.pop();
+    total+= sum(s);
+    s.push(temp);
+    return total;
     // Your code here
-    return T(); // stub return value (0 for primitive types). Change this!
+     // stub return value (0 for primitive types). Change this!
                 // Note: T() is the default value for objects, and 0 for
                 // primitive types
 }
@@ -55,6 +65,27 @@ T sum(stack<T>& s)
  */
 bool isBalanced(queue<char> input)
 {
+    stack<char> openers;
+    if (input.empty()) {
+        return true;
+    }
+    while (!input.empty()) {
+        char current = input.front();
+        input.pop();
+        if (current == '[' || current == '(' || current == '{') {
+            openers.push(current);
+        }
+          
+        current = input.front();
+        if (current == ']' || current == ')' || current == '}') {
+        if (current == openers.top()) {
+            openers.pop();
+        } else {
+            return false;
+        }
+        }
+    }
+
 
     // @TODO: Make less optimistic
     return true;

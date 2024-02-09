@@ -25,5 +25,4 @@ namespace QuackFun
     void scramble(queue<T>& q);
 
 };
-
 #include "quackfun.hpp"

@@ -4,7 +4,7 @@
  */
 
 #include "exercises.h"
-
+#include <iostream>
 /**
  * Given a non-negative int n, return the sum of its digits recursively (no
  * loops).
@@ -22,8 +22,13 @@
  */
 int RecursionExercises::sumDigits(int n)
 {
-
-    return -1;
+    if (n == 0) {
+        return n;
+    }
+    int sum =n%10;
+    std::cout << n << std::endl;
+    return sum += sumDigits(n/10);
+    
 }
 
 /**
@@ -44,7 +49,10 @@ int RecursionExercises::sumDigits(int n)
  * @return     The total number of blocks in the triangle pyramid
  */
 int RecursionExercises::triangle(int rows)
-{
-
-    return -1;
+{   if (rows == 0) {
+    return 0;
+}
+    int sumrow = rows;
+    
+    return sumrow += triangle(rows-1);
 }
