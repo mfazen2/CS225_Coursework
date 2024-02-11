@@ -17,7 +17,9 @@ List<T>::List() {
 template <typename T>
 typename List<T>::ListIterator List<T>::begin() const {
   // @TODO: graded in mp_lists part 1
-  return List<T>::ListIterator(NULL);
+  List<T>::ListIterator temp = List<T>::ListIterator(head_);
+  std::cout << static_cast<int>(head_->data) << std::endl;
+  return temp;
 }
 
 /**
@@ -26,7 +28,7 @@ typename List<T>::ListIterator List<T>::begin() const {
 template <typename T>
 typename List<T>::ListIterator List<T>::end() const {
   // @TODO: graded in mp_lists part 1
-  return List<T>::ListIterator(NULL);
+  return List<T>::ListIterator(nullptr);
 }
 
 
