@@ -62,6 +62,16 @@ int main()
     else
         cout << "Stack " + make_red("CHANGED: :(") << endl;
     cout << endl;
+    // Run isBalanced:
+    cout << "==== balance ====" << endl;
+    string ss= "()";
+    queue<char> qee;
+
+    for (char c : ss)
+        qee.push(c);
+
+    cout << QuackFun::isBalanced(qee) << endl;
+    cout << "EXPECTED: TRUE" << endl;
 
     // Run scramble:
     cout << "==== scramble ====" << endl;

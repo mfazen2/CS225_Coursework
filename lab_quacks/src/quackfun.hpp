@@ -65,17 +65,31 @@ T sum(stack<T>& s)
  */
 bool isBalanced(queue<char> input){
     stack<char> openers;
-
+    std::string check = "";
     while (!input.empty()){
-        switch(input.front()){
-            case '[': openers.push(input.front());
-            case '{': openers.push(input.front());
-            case '(': openers.push(input.front());
-            case ']': if (openers.empty() || openers.top() != '['){return false;}else{openers.pop();}
-            case '}': if (openers.empty() || openers.top() != '{'){return false;}else{openers.pop();}
-            case ')': if (openers.empty() || openers.top() != '('){return false;}else{openers.pop();}
-        }
+        char cur = input.front();
         input.pop();
+        switch(cur){
+            case '[': openers.push(cur); std::cout << "pushing [" << std::endl; break;
+            case '{': openers.push(cur); std::cout << "pushing {" << std::endl; break;
+            case '(': openers.push(cur); std::cout << "pushing (" << std::endl; break;
+            
+            case ']': 
+                if(openers.empty() == true) {return false;}
+                else if (openers.top() != '[' && (openers.top() == '{' || openers.top() == '(')){return false;}
+                else{openers.pop();}
+                break;
+            case '}': 
+                if(openers.empty() == true){return false;}
+                else if (openers.top() != '{'&& (openers.top() == '[' || openers.top() == '(')){return false;}
+                else{openers.pop();}
+                break;
+            case ')': 
+                if(openers.empty() == true) {std::cout << "empty error" << std::endl; return false;}
+                else if (openers.top() != '('&& (openers.top() == '[' || openers.top() == '{')){ std::cout << "some other issue" << std::endl; return false;}
+                else{openers.pop();}
+                break;
+        }
     }
     return openers.empty();
 }
@@ -96,11 +110,23 @@ bool isBalanced(queue<char> input){
  * @param q A queue of items to be scrambled
  */
 template <typename T>
-void scramble(queue<T>& q)
+void scramble(queue<T>& q) 
 {
     stack<T> s;
-    // optional: queue<T> q2;
+    queue<T> q2;
+    int c = 0;
+    while (!q.empty()){
+        c++;
+        if (c % 2 == 0) {
+            int temp = 0;
+            while (temp < c){ if(q.empty()){break;} s.push(q.front()); q.pop(); temp++; }
+            while (!s.empty()){q2.push(s.top()); s.pop(); }
 
-    // Your code here
+         } else if (c % 2 != 0) { 
+            int temp = 0;
+            while(temp < c) { if(q.empty()){break;} q2.push(q.front()); q.pop(); temp++; }
+         }
+    }
+   while(!q2.empty()){ q.push(q2.front()); q2.pop(); }
 }
 }
