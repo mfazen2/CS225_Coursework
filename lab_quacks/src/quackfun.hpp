@@ -63,32 +63,21 @@ T sum(stack<T>& s)
  * @param input The queue representation of a string to check for balanced brackets in
  * @return      Whether the input string had balanced brackets
  */
-bool isBalanced(queue<char> input)
-{
+bool isBalanced(queue<char> input){
     stack<char> openers;
-    if (input.empty()) {
-        return true;
-    }
-    while (!input.empty()) {
-        char current = input.front();
+
+    while (!input.empty()){
+        switch(input.front()){
+            case '[': openers.push(input.front());
+            case '{': openers.push(input.front());
+            case '(': openers.push(input.front());
+            case ']': if (openers.empty() || openers.top() != '['){return false;}else{openers.pop();}
+            case '}': if (openers.empty() || openers.top() != '{'){return false;}else{openers.pop();}
+            case ')': if (openers.empty() || openers.top() != '('){return false;}else{openers.pop();}
+        }
         input.pop();
-        if (current == '[' || current == '(' || current == '{') {
-            openers.push(current);
-        }
-          
-        current = input.front();
-        if (current == ']' || current == ')' || current == '}') {
-        if (current == openers.top()) {
-            openers.pop();
-        } else {
-            return false;
-        }
-        }
     }
-
-
-    // @TODO: Make less optimistic
-    return true;
+    return openers.empty();
 }
 
 /**
