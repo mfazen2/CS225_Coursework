@@ -1,5 +1,4 @@
-#include "List.h"
-template <typename T>
+
 class ListIterator : public std::iterator<std::bidirectional_iterator_tag, T> {
   private:
     // @TODO: graded in mp_lists part 1
