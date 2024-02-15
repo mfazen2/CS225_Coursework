@@ -1,5 +1,4 @@
 
-template <typename T>
 class ListIterator : public std::iterator<std::bidirectional_iterator_tag, T> {
   private:
     // @TODO: graded in mp_lists part 1
@@ -13,38 +12,38 @@ class ListIterator : public std::iterator<std::bidirectional_iterator_tag, T> {
     // Pre-Increment, ++iter
     ListIterator& operator++() {
         // @TODO: graded in mp_lists part 1
-        this = this->next;
+        position_ = position_->next;
         return *this;
     }
     
     // Post-Increment, iter++
     ListIterator operator++(int) {
         // @TODO: graded in mp_lists part 1
-        ListNode* temp = position_;
+        ListIterator temp = ListIterator(position_);
         position_ = position_->next;
-        return ListIterator(temp);
+        return temp;
     }
 
     // Pre-Decrement, --iter
     ListIterator& operator--() {
         // @TODO: graded in mp_lists part 1
-        this = this->prev;
+        *this = new ListIterator(position_->prev);
         return *this;
     }
 
     // Post-Decrement, iter--
     ListIterator operator--(int a) {
         // @TODO: graded in mp_lists part 1
-        ListNode* temp = new ListNode(position_);
+        auto temp = ListIterator(position_);
         for (int i = a; i > 0; i--){
-            this = this->prev;
+            *this = this->position_->prev;
         }
-        return ListIterator(temp);
+        return temp;
     }
 
     bool operator!=(const ListIterator& rhs) {
         // @TODO: graded in mp_lists part 1
-        if (this->data == rhs->data && this->position_ == rhs->position_){
+        if (this->position_->data == rhs.position_->data && this->position_ == rhs.position_){
             return false;
         }
         return true;
