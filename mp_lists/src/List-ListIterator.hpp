@@ -12,22 +12,28 @@ class ListIterator : public std::iterator<std::bidirectional_iterator_tag, T> {
     // Pre-Increment, ++iter
     ListIterator& operator++() {
         // @TODO: graded in mp_lists part 1
-        position_ = position_->next;
+        if (position_->next != NULL){
+            position_ = position_->next;
+        }
         return *this;
     }
     
     // Post-Increment, iter++
     ListIterator operator++(int) {
         // @TODO: graded in mp_lists part 1
-        ListIterator temp = ListIterator(position_);
-        position_ = position_->next;
+        auto temp = ListIterator(position_);
+        if (position_->next != NULL){
+            position_ = position_->next;
+        }
         return temp;
     }
 
     // Pre-Decrement, --iter
     ListIterator& operator--() {
         // @TODO: graded in mp_lists part 1
-        *this = new ListIterator(position_->prev);
+        if (this->position_->prev != NULL){
+            this->position_ = this->position_->prev;
+        }
         return *this;
     }
 
@@ -36,7 +42,8 @@ class ListIterator : public std::iterator<std::bidirectional_iterator_tag, T> {
         // @TODO: graded in mp_lists part 1
         auto temp = ListIterator(position_);
         for (int i = a; i > 0; i--){
-            *this = this->position_->prev;
+            if (position_->prev != NULL)
+            this->position_ = this->position_->prev;
         }
         return temp;
     }
