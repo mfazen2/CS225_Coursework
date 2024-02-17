@@ -18,7 +18,6 @@ List<T>::List() {
 template <typename T>
 typename List<T>::ListIterator List<T>::begin() const {
   // @TODO: graded in mp_lists part 1
-
   return List<T>::ListIterator(head_);
 }
 
@@ -28,10 +27,13 @@ typename List<T>::ListIterator List<T>::begin() const {
 template <typename T>
 typename List<T>::ListIterator List<T>::end() const {
   // @TODO: graded in mp_lists part 1
-  return List<T>::ListIterator(tail_->next);
+  return List<T>::ListIterator(NULL);
 }
 
-
+// template <typename T>
+// typename List<T>::ListNode Tail(){
+//   return tail_;
+// }
 /**
  * Destroys all dynamically allocated memory associated with the current
  * List class.
@@ -64,6 +66,7 @@ void List<T>::insertFront(T const & ndata) {
     head_ = newNode;
   }
   if (tail_ == NULL) {
+    head_ = newNode;
     tail_ = newNode;
   }
   
@@ -82,17 +85,18 @@ template <typename T>
 void List<T>::insertBack(const T & ndata) {
   /// @todo Graded in mp_lists part 1
   ListNode * newNode = new ListNode(ndata);
-  length_+=1;
   newNode->next = NULL;
   if (tail_ != NULL) {
     newNode->prev = tail_;
     tail_->next = newNode;
     tail_ = newNode;
+    length_ += 1;
   }
   if (tail_ == NULL){
     head_ = newNode;
     tail_ = newNode;
     newNode->prev = NULL;
+    length_ = 1;
   }
 }
 
@@ -117,7 +121,7 @@ typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
   /// @todo Graded in mp_lists part 1
   ListNode * curr = start;
 
-  for (int i = 0; i < splitPoint || curr != NULL; i++) {
+  for (int i = 0; i < splitPoint && curr != NULL; i++) {
     curr = curr->next;
   }
 
@@ -141,6 +145,32 @@ typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
 template <typename T>
 void List<T>::waterfall() {
   /// @todo Graded in part 1
+  if (length_ == 0){
+    return;
+  }
+  int othercount = 1;
+  ListNode* temp = head_;
+  ListNode* iter = head_;
+  while (iter->next != NULL){
+    if (othercount %2 == 0){
+      temp = iter->next;
+      iter->next->prev = iter->prev;
+      iter->prev->next = iter->next;
+      tail_->next = iter;
+      iter->prev = tail_;
+      tail_ = iter;
+      tail_->next = NULL;
+      iter = temp;
+      othercount++;
+      continue;
+    }
+    
+    iter = iter->next;
+    othercount++;
+  }
+  temp = NULL;
+  iter = NULL;
+
 }
 
 
@@ -166,6 +196,18 @@ void List<T>::reverse() {
 template <typename T>
 void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
   /// @todo Graded in mp_lists part 2
+  if (startPoint == endPoint){
+    return;
+  }
+  ListNode* iter = endPoint;
+  ListNode* rev = startPoint->prev;
+  ListNode* ender = endPoint->next;
+  int count = 1;
+  while (iter != startPoint){
+    rev->next = iter;
+    iter->prev = rev;
+    
+  }
 }
 
 /**
@@ -181,15 +223,9 @@ void List<T>::reverseNth(int n) {
     return;
   }
   if (n == length_){
-    reverse();
+    reverse(head_,tail_);
   }
-  ListNode * temp = head_;
-  ListNode * newhead = head_;
-  ListNode * newtail = NULL;
-  int count = n;
-  while (temp){
-   
-  }
+ 
 
 }
 

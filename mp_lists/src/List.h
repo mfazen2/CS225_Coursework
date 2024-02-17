@@ -39,7 +39,6 @@ class List {
          * @see List-given.hpp
          */
         ListNode(const T & ndata);
-
         /**
          * A pointer to the next node in the list. May be NULL
          * if one does not exist.
@@ -66,7 +65,9 @@ class List {
      * @see List.hpp
      */
     List();
-
+    \
+    //tail getter DOESNT WORK BECAUSE SOMEONE FUCKED WITH THE COMPILER
+    // ListNode Tail();
     /**
      * Copy constructor for a List.
      * Since Lists allocate dynamic memory (i.e., they use "new", we

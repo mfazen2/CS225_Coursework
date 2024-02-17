@@ -9,55 +9,46 @@ class ListIterator : public std::iterator<std::bidirectional_iterator_tag, T> {
     ListIterator(ListNode* x) : position_(x) { }
 
 
-    // Pre-Increment, ++iter
+    // Pre-Increment, ++iter.
     ListIterator& operator++() {
         // @TODO: graded in mp_lists part 1
-        if (position_->next != NULL){
-            position_ = position_->next;
-        }
+        position_ = position_->next;
         return *this;
     }
     
     // Post-Increment, iter++
     ListIterator operator++(int) {
         // @TODO: graded in mp_lists part 1
-        auto temp = ListIterator(position_);
-        if (position_->next != NULL){
-            position_ = position_->next;
-        }
-        return temp;
+        ListNode* temp = position_;
+        position_ = position_->next;
+        return ListIterator(temp);
+        
     }
 
     // Pre-Decrement, --iter
     ListIterator& operator--() {
         // @TODO: graded in mp_lists part 1
-        if (this->position_->prev != NULL){
-            this->position_ = this->position_->prev;
-        }
+        this->position_ = this->position_->prev;
         return *this;
     }
 
     // Post-Decrement, iter--
     ListIterator operator--(int a) {
         // @TODO: graded in mp_lists part 1
-        auto temp = ListIterator(position_);
-        for (int i = a; i > 0; i--){
-            if (position_->prev != NULL)
-            this->position_ = this->position_->prev;
+        ListIterator & temp = *this;
+         for (int i = a; i > 0; i--){
+                position_ = position_->prev;
         }
         return temp;
     }
 
     bool operator!=(const ListIterator& rhs) {
         // @TODO: graded in mp_lists part 1
-        if (position_->data == rhs.position_->data && position_->next == rhs.position_->next && position_->prev == rhs.position_->prev){
-            return false;
-        }
-        return true;
+        return !(*this == rhs);
     }
 
     bool operator==(const ListIterator& rhs) {
-        return !(*this != rhs);
+        return (this->position_ == rhs.position_);
     }
 
     const T& operator*() {
