@@ -20,7 +20,6 @@ typename List<T>::ListIterator List<T>::begin() const {
   // @TODO: graded in mp_lists part 1
   return List<T>::ListIterator(head_);
 }
-
 /**
  * Returns a ListIterator one past the end of the List.
  */
@@ -30,10 +29,6 @@ typename List<T>::ListIterator List<T>::end() const {
   return List<T>::ListIterator(NULL);
 }
 
-// template <typename T>
-// typename List<T>::ListNode Tail(){
-//   return tail_;
-// }
 /**
  * Destroys all dynamically allocated memory associated with the current
  * List class.
@@ -64,15 +59,13 @@ void List<T>::insertFront(T const & ndata) {
     newNode -> next = head_;
     head_ -> prev = newNode;
     head_ = newNode;
+    length_+=1;
   }
-  if (tail_ == NULL) {
+  if (head_ == NULL){
     head_ = newNode;
     tail_ = newNode;
+    length_+=1;
   }
-  
-
-  length_+=1;
-
 }
 
 /**
@@ -120,16 +113,12 @@ template <typename T>
 typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
   /// @todo Graded in mp_lists part 1
   ListNode * curr = start;
-
-  for (int i = 0; i < splitPoint && curr != NULL; i++) {
+  for (int i = 0; i < splitPoint; i++) {
+    if(curr -> next == NULL){return curr;}
     curr = curr->next;
   }
-
-  if (curr != NULL) {
-      curr->prev->next = NULL;
-      curr->prev = NULL;
-  }
-
+  curr->prev->next = NULL;
+  curr->prev = NULL;
   return curr;
 }
 
@@ -182,32 +171,56 @@ void List<T>::reverse() {
   reverse(head_, tail_);
 }
 
-/**
- * Helper function to reverse a sequence of linked memory inside a List,
- * starting at startPoint and ending at endPoint. You are responsible for
- * updating startPoint and endPoint to point to the new starting and ending
- * points of the rearranged sequence of linked memory in question.
- *
- * @param startPoint A pointer reference to the first node in the sequence
- *  to be reversed.
- * @param endPoint A pointer reference to the last node in the sequence to
- *  be reversed.
- */
+// /**
+//  * Helper function to reverse a sequence of linked memory inside a List,
+//  * starting at startPoint and ending at endPoint. You are responsible for
+//  * updating startPoint and endPoint to point to the new starting and ending
+//  * points of the rearranged sequence of linked memory in question.
+//  *
+//  * @param startPoint A pointer reference to the first node in the sequence
+//  *  to be reversed.
+//  * @param endPoint A pointer reference to the last node in the sequence to
+//  *  be reversed.
+//  */
 template <typename T>
 void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
   /// @todo Graded in mp_lists part 2
   if (startPoint == endPoint){
     return;
   }
-  ListNode* iter = endPoint;
-  ListNode* rev = startPoint->prev;
-  ListNode* ender = endPoint->next;
-  int count = 1;
-  while (iter != startPoint){
-    rev->next = iter;
-    iter->prev = rev;
-    
+
+
+  ListNode * temp1 = startPoint;
+  ListNode * temp2 = startPoint;
+  ListNode * endhold = endPoint->next;
+
+  while (temp1 !=endhold)
+  {
+      temp2 = temp1->prev;
+      temp1->prev = temp1->next;
+      temp1->next = temp2;
+      temp1 = temp1->prev;
   }
+  temp2 = endPoint->prev;
+
+  if (startPoint->next != NULL){
+    endPoint->prev = startPoint->next;
+    startPoint->next->next = endPoint;
+  }else{
+    endPoint->prev = NULL;   
+  }
+  if(temp2 != NULL){
+    startPoint->next = temp2;
+    temp2->prev = startPoint;
+    
+  } else {
+    startPoint->next = NULL;
+  }
+  temp1 = startPoint;
+  startPoint = endPoint;
+  endPoint = temp1;
+  temp1 = NULL;
+  temp2 = NULL;
 }
 
 /**
@@ -219,15 +232,48 @@ void List<T>::reverse(ListNode *& startPoint, ListNode *& endPoint) {
 template <typename T>
 void List<T>::reverseNth(int n) {
   /// @todo Graded in mp_lists part 2
+
+  //edge case
   if (n == 1 || length_ <= 1){
     return;
   }
+  //full length case
   if (n == length_){
-    reverse(head_,tail_);
+    reverse();
   }
- 
-
+  //standard
+  int blockcount = 0;
+  int loopcount = 0;
+  ListNode* temphead = head_;
+  ListNode* iter = head_;
+  ListNode* temptail = head_;
+  while (iter != NULL){
+    if(blockcount == 0){
+      //reset blockcount
+      if (loopcount == 1){
+        head_ = temptail;
+      }
+      loopcount++;
+      blockcount = n;
+      reverse(temphead,temptail);
+      //reset positions of head and tail to new starting point
+      temphead = iter;
+      temptail = iter;
+    }
+    //reverse if tail cannot be updated
+    if(iter->next == NULL){
+      reverse(temphead,iter);
+    }
+    //increment tail and iterator
+    temptail = iter;
+    iter = iter->next;
+    blockcount--;
+  }
 }
+
+
+
+
 
 
 /**
@@ -268,7 +314,49 @@ void List<T>::mergeWith(List<T> & otherList) {
 template <typename T>
 typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) {
   /// @todo Graded in mp_lists part 2
-  return NULL;
+  if (first == NULL){
+    return second;
+  }
+  if (second == NULL){
+    return first;
+  }
+  ListNode* headout = nullptr;
+  ListNode* head1 = first;
+  ListNode* head2 = second;
+  ListNode* holder = nullptr;
+  ListNode* temp = nullptr;
+  while (head1!=NULL || head2!= NULL){
+    //after one or the other is null (used a sort of ladder-like traversal), we will append the rest of whichever list remains onto the new list.
+    if (head1 == NULL){
+      temp = head2;
+      head2 = NULL;
+    } else if (head2 == NULL){
+      temp = head1;
+      head1 = NULL;
+    }
+    //standard section
+    if(head1 != NULL && head2 != NULL){
+      if(head1->data < head2->data){
+        temp = head1;
+        head1 = head1->next;
+      } else {
+        temp = head2;
+        head2 = head2->next;
+      }
+    }
+    //take care of head
+    if(headout == NULL){
+      headout = temp;
+    } else {
+      holder->next = temp;
+      temp->prev = holder;
+    }
+    holder = temp;
+
+  }
+  
+
+  return headout;
 }
 
 /**

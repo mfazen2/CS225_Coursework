@@ -26,20 +26,22 @@ class ListIterator : public std::iterator<std::bidirectional_iterator_tag, T> {
     }
 
     // Pre-Decrement, --iter
+ 
     ListIterator& operator--() {
         // @TODO: graded in mp_lists part 1
+
+        std::cout << position_->data;
         this->position_ = this->position_->prev;
         return *this;
     }
 
-    // Post-Decrement, iter--
+    // Post-Decrement, iter-- 
     ListIterator operator--(int a) {
         // @TODO: graded in mp_lists part 1
-        ListIterator & temp = *this;
-         for (int i = a; i > 0; i--){
-                position_ = position_->prev;
-        }
-        return temp;
+        
+        ListNode* temp = position_;
+        position_ = position_->prev;
+        return ListIterator(temp);
     }
 
     bool operator!=(const ListIterator& rhs) {
