@@ -91,7 +91,6 @@ class AVLTree
      * @return The value stored for that key
      */
     V find(const K& key) const;
-
     /**
      * Prints the function calls to a stream.
      * @param out The stream to print to (default is stdout)
@@ -153,7 +152,6 @@ class AVLTree
      * @return The value stored for that key
      */
     V find(Node* node, const K& key) const;
-
     /**
      * Rotate the tree right (there is an imbalance on the left side).
      * @param node The node to rotate

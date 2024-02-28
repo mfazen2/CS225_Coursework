@@ -284,9 +284,12 @@ bool smallerDimVal(const Point<Dim>& first, const Point<Dim>& second,
   * @param k iterator to the location in the range to find
   * @param cmp compare function true if arg1 is less than arg2
   */
+
 template <typename RandIter, typename Comparator>
 void select(RandIter begin, RandIter end, RandIter k, Comparator cmp);
 
+template <typename RandIter, typename Comparator>
+RandIter Partition(RandIter begin, RandIter stop, RandIter pivot, Comparator cmp);
 
 #include "kdtree.hpp"
 #include "kdtree_extras.hpp"

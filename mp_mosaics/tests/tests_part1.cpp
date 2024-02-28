@@ -89,7 +89,9 @@ TEST_CASE("select simple","[weight=1][part=1]") {
   select(std::begin(numbers), std::end(numbers), std::begin(numbers) + 1, cmp);
 
   REQUIRE(!isSorted(numbers.begin(), numbers.end(), cmp));
-
+  for (auto i : numbers){
+    std::cout << i << std::endl;
+  }
   REQUIRE(numbers[1] == 5);
 }
 

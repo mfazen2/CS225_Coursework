@@ -113,6 +113,10 @@ template <typename T>
 typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
   /// @todo Graded in mp_lists part 1
   ListNode * curr = start;
+  if (splitPoint < 0){splitPoint=0;}
+  if (splitPoint > length_){
+    return tail_->next;
+  }
   for (int i = 0; i < splitPoint; i++) {
     if(curr -> next == NULL){return curr;}
     curr = curr->next;
@@ -373,5 +377,12 @@ typename List<T>::ListNode * List<T>::merge(ListNode * first, ListNode* second) 
 template <typename T>
 typename List<T>::ListNode* List<T>::mergesort(ListNode * start, int chainLength) {
   /// @todo Graded in mp_lists part 2
-  return NULL;
+   if (chainLength==1)
+        return start;
+    int midlength = chainLength/2;
+    ListNode *rightlist = split(start,midlength);
+    ListNode *leftlist = start;
+    rightlist = mergesort(rightlist,chainLength-midlength);
+    start = mergesort(leftlist,midlength);
+    return merge(rightlist,start);
 }
