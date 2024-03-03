@@ -75,10 +75,24 @@ void BinaryTree<T>::printLeftToRight(const Node* subRoot) const
  * Flips the tree over a vertical axis, modifying the tree itself
  *  (not creating a flipped copy).
  */
-    template <typename T>
+template <typename T>
 void BinaryTree<T>::mirror()
 {
     //your code here
+    mirror(root);
+    
+}
+template <typename T>
+void BinaryTree<T>::mirror(Node* subtree)
+{
+    //your code here
+    if (subtree == NULL){return;}
+    mirror(subtree->left);
+    mirror(subtree->right);
+    Node* temp = subtree->left;
+    subtree->left = subtree->right;
+    subtree->right = temp;
+    
 }
 
 
@@ -89,10 +103,21 @@ void BinaryTree<T>::mirror()
  *  criterion for a binary tree to be a binary search tree.
  */
 template <typename T>
-bool BinaryTree<T>::isOrderedIterative() const
-{
+bool BinaryTree<T>::isOrderedIterative() const {
     // your code here
-    return false;
+    InorderTraversal<int> iot(root);
+    TreeTraversal<int>::Iterator val = iot.begin();
+    std::cout <<"newFunctionCall"<<std::endl;
+    printLeftToRight(root);
+    std::cout << "\n\n\n" << std::endl;
+    for (TreeTraversal<int>::Iterator it = iot.begin(); it != iot.end(); ++it) {
+        std::cout<<(*it)->elem<<" ";
+        if ((*it)->elem < (*val)->elem){return false;}
+        val = it;
+
+    }
+    std::cout << "\n"<<std::endl;
+    return true;
 }
 
 /**
@@ -104,7 +129,21 @@ bool BinaryTree<T>::isOrderedIterative() const
 template <typename T>
 bool BinaryTree<T>::isOrderedRecursive() const
 {
+
     // your code here
+
+    return RecursiveHelp(root,INT16_MIN,INT16_MAX);
+}
+
+template <typename T>
+bool BinaryTree<T>::RecursiveHelp(Node* node, T min, T max) const
+{
+  if (node == NULL) {
+    return true;
+  } else if(node->elem < min || node->elem > max){
     return false;
+  } else {
+      return RecursiveHelp(node->left, min, node->elem) && RecursiveHelp(node->right, node->elem, max);
+  }
 }
 
