@@ -91,7 +91,9 @@ class KDTree
      * @param newPoints The vector of points to build your KDTree off of.
      */
     KDTree(const vector<Point<Dim>>& newPoints);
-
+    
+    /*recursive helper to build tree,done to avoid iterative implementation, and to avoid const vector issues*/
+    KDTreeNode * TreeBuilder(vector<Point<Dim>>& list, int dim, int left,int right);
 
     /**
      * Copy constructor for KDTree.
@@ -107,12 +109,15 @@ class KDTree
      * @return A reference for performing chained assignments.
      */
     KDTree const &operator=(const KDTree<Dim>& rhs);
-
+    /*Helper for copy constructor and copy assignment operator*/
+    void CopyHelper(KDTreeNode *thisTree, KDTreeNode * otherTree);
     /**
      * Destructor for KDTree.
      */
     ~KDTree();
-
+    /*generalized destructor helper for KDTrees, passed a reference to a node pointer
+    , used recursively to progress down the tree and delete memory post traversal*/
+    void GeneralDestructor(KDTreeNode *& node);
     /**
      * Finds the closest point to the parameter point in the KDTree.
      *
@@ -171,7 +176,7 @@ class KDTree
      * @return The closest point to a in the KDTree.
      */
     Point<Dim> findNearestNeighbor(const Point<Dim>& query) const;
-
+    Point<Dim> findHelper(const Point<Dim>& query, KDTreeNode* node, int currdim) const;
     // functions used for grading:
 
     /**
