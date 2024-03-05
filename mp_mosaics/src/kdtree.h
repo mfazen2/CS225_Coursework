@@ -175,8 +175,10 @@ class KDTree
      *  tree.
      * @return The closest point to a in the KDTree.
      */
+    
+
     Point<Dim> findNearestNeighbor(const Point<Dim>& query) const;
-    Point<Dim> findHelper(const Point<Dim>& query, KDTreeNode* node, int currdim) const;
+    Point<Dim> findHelper(const Point<Dim>& query,KDTreeNode* node, int currdim) const;
     // functions used for grading:
 
     /**
@@ -272,8 +274,8 @@ bool shouldReplace(const Point<Dim>& target, const Point<Dim>& currentBest,
 template <int Dim>
 bool smallerDimVal(const Point<Dim>& first, const Point<Dim>& second,
                     int curDim);
-
-
+template <int Dim>
+double Radius(Point<Dim> p1, Point<Dim> p2);
 
 /**
   * This function uses the quickselect algorithm to partition the given

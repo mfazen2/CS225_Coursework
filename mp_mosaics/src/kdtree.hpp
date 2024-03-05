@@ -64,11 +64,11 @@ typename KDTree<Dim>::KDTreeNode * KDTree<Dim>::TreeBuilder(vector<Point<Dim>>& 
     return NULL;
   }
   KDTreeNode * subroot;
-  int med = (left + right)/2;
-  auto median = list.begin()+((left + right)/2);
+  int med = (right + left)/2;
+  auto median = list.begin()+med;
   auto begin = list.begin()+left;
-  auto end = list.begin()+right;
-  auto cmp = [](Point<Dim> lhs, Point<Dim> rhs){return lhs <= rhs;};
+  auto end = list.begin()+right+1;
+  auto cmp = [dim](Point<Dim> lhs, Point<Dim> rhs){return smallerDimVal(lhs,rhs,dim);};
   select(begin,end,median,cmp);
   subroot = new KDTreeNode((*median));
   dim++;
@@ -130,19 +130,59 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query) const {
     /**
      * @todo Implement this function!
      */
-
     return findHelper(query,root,0);
 }
+//distance helper so i dont have to type it out 50 million times
+template <int Dim>
+double Radius(Point<Dim> p1, Point<Dim> p2){
+  double dist = 0.0;
+  for (int i = 0; i < Dim; i++){
+    dist += (p1[i]-p2[i])*(p1[i]-p2[i]);
+  }
+  return dist;
+}
+
 template <int Dim>
 Point<Dim> KDTree<Dim>::findHelper(const Point<Dim>& query, KDTreeNode* node, int currdim) const {
   if (node->left == NULL && node->right == NULL){
     return node->point;
   }
+
   Point<Dim> best = node->point;
   Point<Dim> closest = best;
-  
-}
+  bool leftsearch = smallerDimVal(query,best,currdim);
+  if (leftsearch && node->left != NULL){
+    //initiate left subtree search, based on splitting plane (dimVal)
+    // recursively call, but iterate currDim
+    best = findHelper(query,node->left,(currdim+1)%Dim);
+  } else if (!leftsearch && node->right != NULL){
+    best = findHelper(query,node->right,(currdim+1)%Dim);
+  }
+  if (shouldReplace(query, best, closest)) {
+    best = closest;
+  }
+  double radius = Radius(best,query);
+  //dimradius is the distance to the splitting plane from the query node
+  double dimRadius = 0;
+  dimRadius = (query[currdim] - node->point[currdim]) * (query[currdim] - node->point[currdim]);
+  if (dimRadius <= radius){
+    /*search other subtree if dimRadius lies within the radius of current best
+    *switch cases from above, check if node->left and right exist for each travel path
+    *if we do not switch, we effectively search the same branch of the tree, making this portion of the function
+    useless*/
+    if (leftsearch && node->right != NULL){
+      closest = findHelper(query,node->right,(currdim+1)%Dim);
+    } else if (!leftsearch && node->left != NULL){
+      closest = findHelper(query,node->left,(currdim+1)%Dim);
+    }
+    if (shouldReplace(query,best,closest)){
+      best=closest;
+    }
 
+  }
+  return best;
+
+}
 template <typename RandIter, typename Comparator>
 RandIter Partition(RandIter begin, RandIter stop,RandIter pivot, Comparator cmp){
   auto pivotval = *pivot;
@@ -164,16 +204,13 @@ void select(RandIter start, RandIter end, RandIter k, Comparator cmp){
   RandIter temp2 = start;
   RandIter tempend = end;
   while (temp != end){
-    std::cout << *temp << std::endl;
     temp++;
   }
-  std::cout << "\n\n" << std::endl;
   if (start == end){
     return;
   }
   RandIter right = end -1;
   while (true){
-  std::cout << "looping" << std::endl;
   if (start == right){
     return;
   }
@@ -189,7 +226,6 @@ void select(RandIter start, RandIter end, RandIter k, Comparator cmp){
     }
   }
   while (temp2 != tempend){
-    std::cout << *temp2 << std::endl;
     temp2++;
   }
 }

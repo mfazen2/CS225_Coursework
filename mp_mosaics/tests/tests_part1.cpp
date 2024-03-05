@@ -151,10 +151,10 @@ TEST_CASE("KDTree constructor, 3D (Dim = 3)", "[weight=1][part=1]") {
 // }
 
 TEST_CASE("KDTree::findNearestNeighbor, exact match, 1D (Dim=1)", "[weight=1][part=1]") {
-  _test_linear_nearestNeighbor<1>(10);
+  _test_linear_nearestNeighbor<2>(10);
 }
 
-TEST_CASE("KDTree::findNearestNeighbor, exact match, 3D (Dim=3)", "[weight=1][part=1]") {
+TEST_CASE("KDTree::findNearestNeighbor, exact match, 1D (Dim=3)", "[weight=1][part=1]") {
   _test_linear_nearestNeighbor<3>(31);
   }
 
