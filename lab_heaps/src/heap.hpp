@@ -61,6 +61,13 @@ template <class T, class Compare>
 void heap<T, Compare>::heapifyDown(size_t currentIdx)
 {
     // @TODO Implement the heapifyDown algorithm.
+    if (currentIdx == root())
+        return;
+    size_t priorIdx = maxPriorityChild(currentIdx);
+    if (higherPriority(_elems[currentIdx], _elems[priorIdx])) {
+        std::swap(_elems[currentIdx], _elems[priorIdx]);
+        heapifyDown(priorIdx);
+    }
 }
 
 template <class T, class Compare>
