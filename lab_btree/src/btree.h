@@ -325,7 +325,28 @@ class BTree
     bool is_valid(const BTreeNode* subroot, std::vector<DataPair>& data,
                   unsigned int order) const;
 };
-
+/*Binary Search Helper for Insertion Index*/
+template <class T, class C>
+size_t binarySearch(const std::vector<T>& elements, const C& val,size_t left,size_t right){
+    size_t median = (right+left)/2;
+    if (left == right){
+        if (val > elements[left]){
+            return left+1;
+        } else if (val < elements[left]){
+            return left;
+        }
+    }
+    if (left == median && val < elements[left]){
+        return left;
+    }
+    if (val < elements[median]){
+        return binarySearch(elements,val,left,median-1);
+    }
+    if (val > elements[median]){
+        return binarySearch(elements,val,median+1,right);
+    }
+    return median;
+}
 /**
  * Generalized function for finding the insertion index of a given element
  * into a given sorted vector.
@@ -338,12 +359,13 @@ class BTree
  * the sorted order of elements. If val occurs in elements, then this returns
  * the index of val in elements.
  */
+
 template <class T, class C>
 size_t insertion_idx(const std::vector<T>& elements, const C& val)
 {
     /* TODO Your code goes here! */
-
-    return 5;
+    if (elements.size()==0) return 0;
+    return binarySearch(elements,val,0,elements.size()-1);
 }
 
 #include "btree_given.hpp"

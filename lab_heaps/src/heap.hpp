@@ -12,35 +12,36 @@ template <class T, class Compare>
 size_t heap<T, Compare>::root() const
 {
     // @TODO Update to return the index you are choosing to be your root.
-    return 0;
+    //Chose, making it 1-indexed
+    return 1;
 }
 
 template <class T, class Compare>
 size_t heap<T, Compare>::leftChild(size_t currentIdx) const
 {
     // @TODO Update to return the index of the left child.
-    return 0;
+    return 2*currentIdx;
 }
 
 template <class T, class Compare>
 size_t heap<T, Compare>::rightChild(size_t currentIdx) const
 {
     // @TODO Update to return the index of the right child.
-    return 0;
+    return  2*currentIdx+1;
 }
 
 template <class T, class Compare>
 size_t heap<T, Compare>::parent(size_t currentIdx) const
 {
     // @TODO Update to return the index of the parent.
-    return 0;
+    return currentIdx/2;
 }
 
 template <class T, class Compare>
 bool heap<T, Compare>::hasAChild(size_t currentIdx) const
 {
     // @TODO Update to return whether the given node has a child
-    return false;
+    return currentIdx*2 < _elems.size();
 }
 
 template <class T, class Compare>
@@ -48,6 +49,11 @@ size_t heap<T, Compare>::maxPriorityChild(size_t currentIdx) const
 {
     // @TODO Update to return the index of the child with highest priority
     ///   as defined by higherPriority()
+    if (hasAChild(currentIdx)){
+        if(higherPriority(_elems[leftChild(currentIdx)],_elems[rightChild(currentIdx)])){
+            return leftChild(currentIdx);
+        } else {return rightChild(currentIdx);}
+    }
     return 0;
 }
 
