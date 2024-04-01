@@ -20,11 +20,13 @@ int main() {
   // - The code provided below produces the `myFloodFill.png` file you must
   //   submit Part 3 of this assignment -- uncomment it when you're ready.
   
-  /*
+  Animation animation;
+  HSLAPixel color(231, 1, 0.5);
+  SolidColorPicker solid(color);
   PNG lastFrame = animation.getFrame( animation.frameCount() - 1 );
   lastFrame.writeToFile("myFloodFill.png");
   animation.write("myFloodFill.gif");
-  */
+
 
 
   return 0;

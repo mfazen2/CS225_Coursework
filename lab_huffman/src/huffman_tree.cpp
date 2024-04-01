@@ -82,7 +82,44 @@ HuffmanTree::removeSmallest(queue<TreeNode*>& singleQueue,
      * smaller of the two queues heads is the smallest item in either of
      * the queues. Return this item after removing it from its queue.
      */
-    return NULL;
+    TreeNode* smallest;
+    if (singleQueue.empty()){
+        smallest = mergeQueue.front();
+        mergeQueue.pop();
+    } else if (mergeQueue.empty()){
+        smallest = singleQueue.front();
+        singleQueue.pop();
+    } else if (mergeQueue.front()->freq < singleQueue.front()->freq){
+        smallest = mergeQueue.front();
+        mergeQueue.pop();
+    } else {
+        smallest = singleQueue.front();
+        singleQueue.pop();
+    }
+    return smallest;
+}
+
+bool HuffmanTree::shouldCombine(queue<TreeNode*> single, queue<TreeNode*> merge){
+    return single.size() + merge.size() > 1;
+}
+
+void HuffmanTree:Combine(&queue<TreeNode*> single, &queue<TreeNode*> merge){
+    TreeNode* smaller = this->removeSmallest(single,merge);
+    TreeNode* larger = this->removeSmallest(single,merge);
+    TreeNode* combination = new TreeNode(smaller->freq.getFrequency() + larger->freq.getFrequency());
+    combination->left = smaller;
+    combination->right = larger;
+    merge.push(combination);
+}
+
+void rootAssign (&queue<TreeNode*> single, &queue<TreeNode*> merge){
+    if (single.empty()){
+        this->root = merge.front();
+        merge.pop();
+    } else {
+        this->root = single.front();
+        single.pop();
+    }
 }
 
 void HuffmanTree::buildTree(const vector<Frequency>& frequencies)
@@ -107,6 +144,15 @@ void HuffmanTree::buildTree(const vector<Frequency>& frequencies)
      * Finally, when there is a single node left, it is the root. Assign it
      * to the root and you're done!
      */
+    for (auto value: frequencies){
+        TreeNode* temp = new TreeNode(value);
+        cout << value.getFrequency() << endl;
+        while (true){
+            if (shouldCombine(singleQueue,mergeQueue)){
+                Combine(singleQueue,mergeQueue);
+            }
+        }
+    }
 
 }
 
@@ -132,6 +178,7 @@ void HuffmanTree::decode(stringstream& ss, BinaryFileReader& bfile)
          * character to the stringstream (with operator<<, just like cout)
          * and start traversing from the root node again.
          */
+        TreeNode curr = root
     }
 }
 

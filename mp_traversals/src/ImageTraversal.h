@@ -70,21 +70,24 @@ namespace Traversals {
     class Iterator : std::iterator<std::forward_iterator_tag, Point> {
     public:
       Iterator();
-
+      Iterator(PNG png, Point start, double tolerance,ImageTraversal* tra);
       Iterator & operator++();
       Point operator*();
       bool operator!=(const Iterator &other);
-
+      bool canVisit(Point p);
       size_t size() const;
       bool empty() const;
-
+      bool end;
       /** @todo [Part 1] */
       /** add member functions if neccesary*/
     private:
       /** @todo [Part 1] */
       /** add private members here if neccesary*/
+      ImageTraversal* tra_;
       std::deque<Point> work_list_;
-
+      Point pStart_;
+      //record points were visited  
+      std::vector<std::vector<bool>> visits;
     };
 
     /**
@@ -96,14 +99,21 @@ namespace Traversals {
     * Returns an iterator for the traversal starting at the first point (specified in the constructor).
     */
     Iterator begin();
-
+    PNG getPNG();
     /**
     * Returns an iterator for the traversal one past the end of the traversal.
     */
     Iterator end();
+    /*canVisit helper function*/
+    
 
   private:
     /** @todo [Part 1] */
     /** add private members here if neccesary*/
+    TraversalFunctions fns_;
+    Iterator iter;
+    Point begin_;
+    PNG png_;
+    double tolerance_;
   };
 }

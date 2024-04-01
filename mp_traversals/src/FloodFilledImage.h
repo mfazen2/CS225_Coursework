@@ -26,10 +26,14 @@ public:
   FloodFilledImage(const PNG & png);
   void addFloodFill(Traversals::ImageTraversal & traversal, ColorPicker & colorPicker);
   Animation animate(unsigned frameInterval) const;
+  ~FloodFilledImage();
 
 private:
 	/** @todo [Part 2] */
 	/** add private members here*/
+  PNG* png_;
+  std::vector<Traversals::ImageTraversal*> tra_;
+  std::vector<ColorPicker*> cp_;
 
 
 };

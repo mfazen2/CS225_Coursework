@@ -18,6 +18,7 @@ using namespace cs225;
  */
 FloodFilledImage::FloodFilledImage(const PNG & png) {
   /** @todo [Part 2] */
+  png_ = new PNG(png);
 }
 
 /**
@@ -29,6 +30,10 @@ FloodFilledImage::FloodFilledImage(const PNG & png) {
  */
 void FloodFilledImage::addFloodFill(Traversals::ImageTraversal & traversal, ColorPicker & colorPicker) {
   /** @todo [Part 2] */
+  Traversals::ImageTraversal* tra = &traversal;
+  ColorPicker* cp = &colorPicker;
+  tra_.push_back(tra);
+  cp_.push_back(cp);
 }
 
 /**
@@ -54,5 +59,32 @@ void FloodFilledImage::addFloodFill(Traversals::ImageTraversal & traversal, Colo
 Animation FloodFilledImage::animate(unsigned frameInterval) const {
   /** @todo [Part 2] */
   Animation animation;
+  animation.addFrame(*png_);
+  unsigned int cpindex = 0;
+  for (Traversals::ImageTraversal* trav : tra_){
+    Traversals::ImageTraversal::Iterator begin = trav->begin();
+    Traversals::ImageTraversal::Iterator end = trav->end();
+    unsigned int flag = 0;
+    for (Point p : *trav){
+      if (flag == frameInterval){
+        flag = 0;
+        animation.addFrame(*png_);
+      }
+      HSLAPixel& og = png_->getPixel(p.x,p.y);
+      HSLAPixel modified = cp_[cpindex]->getColor(p.x,p.y);
+      og.h = modified.h;
+      og.s = modified.s;
+      og.l = modified.l;
+      og.a = modified.a;
+      flag++;
+    }
+    cpindex++;
+    animation.addFrame(*png_);
+  }
+
   return animation;
+}
+
+FloodFilledImage::~FloodFilledImage(){
+  delete png_;
 }

@@ -9,6 +9,7 @@
 #include "ImageTraversal.h"
 
 namespace Traversals {
+  PNG ImageTraversal::getPNG(){return png_;}
   /**
   * Calculates a metric for the difference between two pixels, used to
   * calculate if a pixel is within a tolerance.
@@ -36,6 +37,7 @@ namespace Traversals {
   */
   void bfs_add(std::deque<Point> & work_list, const Point & point) {
     /** @todo [Part 1] */
+    work_list.push_back(point);
   }
 
   /**
@@ -45,6 +47,7 @@ namespace Traversals {
   */
   void dfs_add(std::deque<Point> & work_list, const Point & point) {
     /** @todo [Part 1] */
+    work_list.push_front(point);
   }
 
   /**
@@ -53,6 +56,7 @@ namespace Traversals {
   */
   void bfs_pop(std::deque<Point> & work_list) {
     /** @todo [Part 1] */
+    work_list.pop_front();
   }
 
   /**
@@ -61,6 +65,7 @@ namespace Traversals {
   */
   void dfs_pop(std::deque<Point> & work_list) {
     /** @todo [Part 1] */
+    work_list.pop_front();
   }
 
   /**
@@ -70,7 +75,7 @@ namespace Traversals {
    */
   Point bfs_peek(std::deque<Point> & work_list) {
     /** @todo [Part 1] */
-    return Point(0, 0);
+    return work_list.front();
   }
 
   /**
@@ -80,7 +85,18 @@ namespace Traversals {
    */
   Point dfs_peek(std::deque<Point> & work_list) {
     /** @todo [Part 1] */
-    return Point(0, 0);
+    return work_list.front();
+  }
+  /*helper function to determine if a point is visitable*/
+  bool ImageTraversal::Iterator::canVisit(Point p){
+    if (p.x < tra_->png_.width() && p.y < tra_->png_.height()){
+      HSLAPixel start = tra_->png_.getPixel(tra_->begin_.x,tra_->begin_.y);
+      HSLAPixel target = tra_->png_.getPixel(p.x,p.y);
+      if (calculateDelta(start,target)>=tra_->tolerance_){return false;}
+      return true;
+    }
+    return false;
+
   }
 
   /**
@@ -92,7 +108,12 @@ namespace Traversals {
   * it will not be included in this traversal
   * @param fns the set of functions describing a traversal's operation
   */
-  ImageTraversal::ImageTraversal(const PNG & png, const Point & start, double tolerance, TraversalFunctions fns) {  
+  ImageTraversal::ImageTraversal(const PNG & png, const Point & start, double tolerance, TraversalFunctions fns) { 
+    fns_ = fns;
+    begin_ = start;
+    tolerance_ = tolerance;
+    png_ = png;
+     iter = Iterator(png,start,tolerance,this);
     /** @todo [Part 1] */
   }
 
@@ -101,7 +122,9 @@ namespace Traversals {
   */
   ImageTraversal::Iterator ImageTraversal::begin() {
     /** @todo [Part 1] */
-    return ImageTraversal::Iterator();
+    ImageTraversal::Iterator it = ImageTraversal::Iterator(png_,begin_,tolerance_,this);
+    return it;
+
   }
 
   /**
@@ -109,17 +132,31 @@ namespace Traversals {
   */
   ImageTraversal::Iterator ImageTraversal::end() {
     /** @todo [Part 1] */
-    return ImageTraversal::Iterator();
-  }
+    ImageTraversal::Iterator iter = ImageTraversal::Iterator();
+    iter.end = true;
+    return iter;
+    }
 
   /**
   * Default iterator constructor.
   */
   ImageTraversal::Iterator::Iterator() {
     /** @todo [Part 1] */
+    tra_ = NULL;
+    end = false;
+    
   }
-
-
+  ImageTraversal::Iterator::Iterator(PNG png, Point start, double tolerance,ImageTraversal* tra) {
+    /** @todo [Part 1] */
+    tra_ = tra;
+    pStart_ = start;
+    visits = std::vector<std::vector<bool>>(png.width(),std::vector<bool>(png.height(),false));
+    end = false;
+    if (canVisit(pStart_)){
+      visits[pStart_.x][pStart_.y] = true;
+    } else {end = true;} 
+    
+  }
   /**
   * Iterator increment operator.
   *
@@ -127,7 +164,32 @@ namespace Traversals {
   */
   ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
     /** @todo [Part 1] */
+    //define and check visitability of our current point's neighbors
+    Point n1 = Point(pStart_.x+1,pStart_.y);
+    Point n2 = Point(pStart_.x,pStart_.y+1);
+    Point n3 = Point(pStart_.x-1,pStart_.y);
+    Point n4 = Point(pStart_.x,pStart_.y-1);
+    if (canVisit(n1)) tra_->fns_.add(work_list_,n1);
+    if (canVisit(n2)) tra_->fns_.add(work_list_,n2);
+    if (canVisit(n3)) tra_->fns_.add(work_list_,n3);
+    if (canVisit(n4)) tra_->fns_.add(work_list_,n4);
+    
+    if (work_list_.empty()){end = true; return *this;}
+    /*we dont use the typical convention for pop(), so we need to first call pop(), then
+    call peek to actually get the next value in the list*/
+   
+    Point pnext  = tra_->fns_.peek(work_list_);
+    tra_->fns_.pop(work_list_);
+    
+    while (visits[pnext.x][pnext.y]){
+      if (work_list_.empty()){end = true;return *this;}
+      pnext  = tra_->fns_.peek(work_list_);
+      tra_->fns_.pop(work_list_);
+    }
+    pStart_ = pnext;
+    visits[pStart_.x][pStart_.y] = true;
     return *this;
+
   }
 
   /**
@@ -137,7 +199,7 @@ namespace Traversals {
   */
   Point ImageTraversal::Iterator::operator*() {
     /** @todo [Part 1] */
-    return Point(0, 0);
+    return pStart_;
   }
 
   /**
@@ -147,7 +209,7 @@ namespace Traversals {
   */
   bool ImageTraversal::Iterator::operator!=(const ImageTraversal::Iterator &other) {
     /** @todo [Part 1] */
-    return false;
+    return (end != other.end);
   }
 
   /**
