@@ -188,6 +188,12 @@ class HuffmanTree
      * @param frequencies The set of Frequency objects to build the
      *	tree with.
      */
+    bool shouldCombine(std::queue<TreeNode*> single, std::queue<TreeNode*> merge);
+
+    void Combine(std::queue<TreeNode*>& single, std::queue<TreeNode*>& merge);
+
+    void rootAssign(std::queue<TreeNode*>& single, std::queue<TreeNode*>& merge);
+
     void buildTree(const std::vector<Frequency>& frequencies);
 
     /**
