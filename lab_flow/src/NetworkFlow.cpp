@@ -17,6 +17,23 @@ NetworkFlow::NetworkFlow(Graph & startingGraph, Vertex source, Vertex sink) :
   g_(startingGraph), residual_(Graph(true,true)), flow_(Graph(true,true)), source_(source), sink_(sink) {
 
   // YOUR CODE HERE
+  maxFlow_ = 0; //initialize flow to a minimum state
+  std::vector<Vertex> vertices = g_.getVertices();
+  std::vector<Edge> edges = g_.getEdges();
+  for (const auto& v : vertices) {
+    flow_.insertVertex(v);
+    residual_.insertVertex(v);
+  for (const auto& e : edges){
+    flow_.insertEdge(e.source,e.dest);
+    flow_.setEdgeWeight(e.source,e.dest,e.getWeight());
+    
+    residual_.insertEdge(e.source,e.dest);
+    residual_.setEdgeWeight(e.source,e.dest,e.getWeight());
+    
+    residual_.insertEdge(e.dest,e.source);
+    residual_.setEdgeWeight(e.dest,e.source,0);
+  }
+  }
 }
 
   /**
@@ -79,7 +96,13 @@ bool NetworkFlow::findAugmentingPath(Vertex source, Vertex sink, std::vector<Ver
 
 int NetworkFlow::pathCapacity(const std::vector<Vertex> & path) const {
   // YOUR CODE HERE
-  return 0;
+  if (path.size() <= 1){return 0;}
+  int min = INT_MAX;
+  for (int i = 0; i < static_cast<int>(path.size());i++){
+    int edgeWeight = residual_.getEdgeWeight(path[i],path[i+1]);
+    if (edgeWeight < min){min = edgeWeight;}
+  }
+  return min;
 }
 
   /**
@@ -92,6 +115,7 @@ int NetworkFlow::pathCapacity(const std::vector<Vertex> & path) const {
 
 const Graph & NetworkFlow::calculateFlow() {
   // YOUR CODE HERE
+  
   return flow_;
 }
 
