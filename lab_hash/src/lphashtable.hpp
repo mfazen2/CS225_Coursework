@@ -4,6 +4,8 @@
  */
 #include "lphashtable.h"
 
+using namespace std;
+
 template <class K, class V>
 LPHashTable<K, V>::LPHashTable(size_t tsize)
 {
@@ -79,9 +81,17 @@ void LPHashTable<K, V>::insert(K const& key, V const& value)
      * **Do this check *after* increasing elems (but before inserting)!!**
      * Also, don't forget to mark the cell for probing with should_probe!
      */
-
-    (void) key;   // prevent warnings... When you implement this function, remove this line.
-    (void) value; // prevent warnings... When you implement this function, remove this line.
+    elems++;
+    if(shouldResize()){resizeTable();}
+    size_t h = hashes::hash(key,size);
+    for(unsigned int i = 0; i < size;i++){
+        unsigned int idx = (h+i) % size;
+        if(table[idx] == NULL){
+            table[idx] = new pair<K,V>(key,value);
+            should_probe[idx] = true;
+            return;
+        }
+    }
 }
 
 template <class K, class V>
@@ -90,6 +100,15 @@ void LPHashTable<K, V>::remove(K const& key)
     /**
      * @todo: implement this function
      */
+   size_t h = findIndex(key);
+   if(table[h] == NULL){
+    return;
+   }
+   delete table[h];
+   table[h] = NULL;
+   should_probe[h] = false;
+   elems--;
+
 }
 
 template <class K, class V>
@@ -101,7 +120,13 @@ int LPHashTable<K, V>::findIndex(const K& key) const
      *
      * Be careful in determining when the key is not in the table!
      */
-
+    size_t h = hashes::hash(key,size);
+    for(unsigned int i = 0; i< size;i++){
+        unsigned int idx = (h+i) % size;
+        if(should_probe[idx]){
+            if(table[idx]->first == key){return idx;}
+        }
+    }
     return -1;
 }
 
@@ -159,4 +184,25 @@ void LPHashTable<K, V>::resizeTable()
      *
      * @hint Use findPrime()!
      */
+    unsigned int cursize = size;
+    size = findPrime(size*2);
+    pair<K,V>** temp = new pair<K,V>*[size];
+    delete[] should_probe;
+    should_probe = new bool[size];
+    for (size_t i = 0; i < size;i++){
+        temp[i] = NULL;
+        should_probe[i]=false;
+    }
+    for(unsigned int i = 0; i < cursize;i++){
+        if(table[i] !=NULL){
+            size_t index = hashes::hash(table[i]->first,size);
+            while(temp[index] != NULL){
+                index = (index+1) % size;
+            }
+            temp[index] = table[i];
+            should_probe[index] = true;
+        }
+    }
+    delete[] table;
+    table = temp;
 }

@@ -4,7 +4,8 @@
  */
 
 #include "schashtable.h"
- 
+using namespace std;
+
 template <class K, class V>
 SCHashTable<K, V>::SCHashTable(size_t tsize)
 {
@@ -49,24 +50,27 @@ SCHashTable<K, V>::SCHashTable(SCHashTable<K, V> const& other)
 template <class K, class V>
 void SCHashTable<K, V>::insert(K const& key, V const& value)
 {
-
-    /**
-     * @todo Implement this function.
-     *
-     */
+    elems++;
+    if (shouldResize()){
+        resizeTable();
+    }
+    pair<K,V> p(key,value);
+    size_t index = hashes::hash(key,size);
+    table[index].push_front(p);
 }
 
 template <class K, class V>
 void SCHashTable<K, V>::remove(K const& key)
 {
-    typename std::list<std::pair<K, V>>::iterator it;
-    /**
-     * @todo Implement this function.
-     *
-     * Please read the note in the lab spec about list iterators and the
-     * erase() function on std::list!
-     */
-    (void) key; // prevent warnings... When you implement this function, remove this line.
+    typename list<pair<K, V>>::iterator it;
+    
+    size_t index = hashes::hash(key,size);
+    for(it = table[index].begin();it != table[index].end();it++){
+        if(it->first == key){
+            table[index].erase(it);
+            return;
+        }
+    }
 }
 
 template <class K, class V>
@@ -76,7 +80,13 @@ V SCHashTable<K, V>::find(K const& key) const
     /**
      * @todo: Implement this function.
      */
-
+    size_t index = hashes::hash(key,size);
+    typename list<pair<K, V>>::iterator it;
+    for(it = table[index].begin();it != table[index].end();it++){
+        if(it->first == key){
+            return it->second;
+        }
+    }
     return V();
 }
 
@@ -125,7 +135,6 @@ void SCHashTable<K, V>::clear()
 template <class K, class V>
 void SCHashTable<K, V>::resizeTable()
 {
-    typename std::list<std::pair<K, V>>::iterator it;
     /**
      * @todo Implement this function.
      *
@@ -134,4 +143,16 @@ void SCHashTable<K, V>::resizeTable()
      *
      * @hint Use findPrime()!
      */
+    typename list<pair<K,V>>::iterator it;
+    unsigned int cursize = size;
+    size = findPrime(size*2);
+    list<pair<K,V>>* old = table;
+    table = new list<pair<K,V>>[size];
+    for(unsigned int index = 0; index < cursize;index++){
+        for(it = old[index].begin(); it != old[index].end();it++){
+            insert(it->first,it->second);
+        }
+    }
+    delete[] old;
+
 }

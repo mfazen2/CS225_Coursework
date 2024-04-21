@@ -5,9 +5,8 @@
  * @date 12/02/2009
  */
 #pragma once
-
 #include <vector>
-
+using namespace std;
 /**
  * Each DisjointSets object represents a family of disjoint sets, where each
  * element has an integer index. It is implemented with the optimizations
@@ -63,4 +62,12 @@ class DisjointSets
      */
     int size(int elem);
 
+  //using this section for helper methods
+  private: 
+    //also storing elements in the djs
+    vector<int> elements_;
+    //to avoid running into issues when indexing the vector
+    bool inbounds(int index);
+    //checks if index is a root
+    bool isRoot(int index);
 };

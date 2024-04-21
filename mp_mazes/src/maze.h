@@ -9,6 +9,7 @@
 #include <vector>
 #include "cs225/PNG.h"
 #include "cs225/HSLAPixel.h"
+#include "dsets.h"
 
 
 /**
@@ -20,7 +21,14 @@
  */
 class SquareMaze
 {
-  public:
+  private:
+    int width_;
+    int height_;
+    int area_;
+    DisjointSets sets;
+    std::vector<std::pair<bool,bool>> right_downWalls;
+
+  public: 
     /**
      * No-parameter constructor.
      * Creates an empty maze.

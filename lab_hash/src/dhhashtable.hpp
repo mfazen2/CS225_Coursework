@@ -5,6 +5,8 @@
 
 #include "dhhashtable.h"
 
+using namespace std;
+
 template <class K, class V>
 DHHashTable<K, V>::DHHashTable(size_t tsize)
 {
@@ -83,6 +85,19 @@ void DHHashTable<K, V>::insert(K const& key, V const& value)
 
     (void) key;   // prevent warnings... When you implement this function, remove this line.
     (void) value; // prevent warnings... When you implement this function, remove this line.
+    elems++;
+    if (shouldResize()){
+        resizeTable();
+    }
+    unsigned int h = hashes::secondary_hash(key,size);
+    for (unsigned i = 0;i < size;i++){
+        size_t index = (h + i * hashes::secondary_hash(key,size))%size;
+        if (table[index] == NULL){
+            table[index] = new pair<K,V>(key,value);
+            should_probe[index] = true;
+            return;
+        }
+    }
 }
 
 template <class K, class V>
@@ -91,6 +106,13 @@ void DHHashTable<K, V>::remove(K const& key)
     /**
      * @todo Implement this function
      */
+    size_t index = findIndex(key);
+    if (table[index] == NULL){
+        return;
+    }
+    delete table[index];
+    table[index] = NULL;
+    elems--;
 }
 
 template <class K, class V>
@@ -99,6 +121,15 @@ int DHHashTable<K, V>::findIndex(const K& key) const
     /**
      * @todo Implement this function
      */
+    unsigned int h = hashes::hash(key,size);
+    for (unsigned int i = 0; i < size;i++){
+        size_t index = (h+i * hashes::secondary_hash(key,size))%size;
+        if (should_probe[index]){
+            if (table[index] != NULL && table[index]->first == key){
+                return index;
+            }
+        }
+    }
     return -1;
 }
 
