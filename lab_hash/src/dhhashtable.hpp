@@ -89,7 +89,7 @@ void DHHashTable<K, V>::insert(K const& key, V const& value)
     if (shouldResize()){
         resizeTable();
     }
-    unsigned int h = hashes::secondary_hash(key,size);
+    unsigned int h = hashes::hash(key,size);
     for (unsigned i = 0;i < size;i++){
         size_t index = (h + i * hashes::secondary_hash(key,size))%size;
         if (table[index] == NULL){
