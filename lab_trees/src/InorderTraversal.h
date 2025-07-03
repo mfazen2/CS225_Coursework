@@ -1,4 +1,4 @@
-#pragma once
+  #pragma once
 	
 #include "binarytree.h"
 #include "TreeTraversal.h"

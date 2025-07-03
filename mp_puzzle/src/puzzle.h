@@ -6,6 +6,11 @@
 #include <vector>
 #include <array>
 #include <iostream>
+#include <map>
+#include <queue>
+#include <stack>
+#include <unordered_map>
+#include <unordered_set>
 
 class PuzzleState {
 public:
@@ -35,6 +40,12 @@ public:
     * 12 13 14 15
     */
     PuzzleState(const std::array<uint8_t, 16> state);
+
+
+
+    PuzzleState FailedPuzzle() const;
+
+    std::string Hash(PuzzleState p);
 
     /**
     * Convert the puzzle state to an array.
@@ -87,8 +98,12 @@ public:
     */
     int manhattanDistance(const PuzzleState desiredState = PuzzleState()) const;
 
-
+    friend std::ostream& operator<<(std::ostream& os, PuzzleState P);
+    std::unordered_map<uint8_t,uint8_t> pstate;
+    
 private:
+    
+
 };
 
 /**
@@ -119,3 +134,14 @@ std::vector<PuzzleState> solveAstar(const PuzzleState& startState, const PuzzleS
 */
 std::vector<PuzzleState> solveBFS(const PuzzleState &startState, const PuzzleState &desiredState, size_t *iterations = NULL);
 
+template<>
+struct std::hash<PuzzleState> {
+    unsigned int operator()(const PuzzleState& k) const {
+        unsigned int hash = 0;
+        for (auto& entry : k.pstate) {
+            hash = 37 * hash + std::hash<uint8_t>{}(entry.first);
+            hash = 37 * hash + std::hash<uint8_t>{}(entry.second);
+        }
+        return hash;
+    }
+};
